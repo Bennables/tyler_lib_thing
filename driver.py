@@ -7,17 +7,37 @@ import datetime
 def wait(secs:int):
     time.sleep(secs)
 
+if __name__ == '__main__':
 
-driver = webdriver.Chrome()
-driver.get("https://calendar.library.ucsc.edu/spaces")
-wait(10)
+    driver = webdriver.Chrome()
+    driver.get("https://calendar.library.ucsc.edu/spaces")
+    wait(10)
 
-available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
-# for i in available:
-    # print(i.get_attribute("title").split(' ')[0])
+    available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
+    # for i in available:
+        # print(i.get_attribute("title").split(' ')[0])
 
-available = sorted(available, key = lambda index : (index.get_attribute("title")[index.get_attribute('title').index('-') + 2:], datetime.datetime.strptime(index.get_attribute("title").split(' ')[0], "%I:%M%p")))
-for i in available:
-    print(i.get_attribute("title"))
-print(available)
-#
+    available = sorted(available, key = lambda index : (index.get_attribute("title")[index.get_attribute('title').index('-') + 2:], datetime.datetime.strptime(index.get_attribute("title").split(' ')[0], "%I:%M%p")))
+    # for i in available:
+    #     print(i.get_attribute("title"))
+    # print(available)
+
+    #when you book a slot, if there's one immediately after, it, it auto chooses that one too.
+    #tyler doesn't want the ground floors
+    ground = []
+    i = 0
+    while i < len(available):
+        starts = available[i].get_attribute("title")[available[i].get_attribute('title').index('-') + 2:].startswith("Ground")
+        print(starts)
+        if starts:
+            ground.append(available[i])
+            available.remove(available[i])
+            i-=1
+        i+=1
+
+
+    for i in available:
+        print(i.get_attribute("title"))
+
+    for i in ground:
+        print(i)
