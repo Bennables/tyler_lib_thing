@@ -21,4 +21,4 @@ available = sorted(available, key = lambda index : ( datetime.datetime.strptime(
 for i in available:
     print(i.get_attribute("title"))
 print(available)
-#a
+#
