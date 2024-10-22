@@ -9,10 +9,13 @@ def wait(secs:int):
 
 def find_consec(avail : list, consec: int):
     for b in range(len(avail)):
+        name1 = avail[b].get_attribute('title').split(' - ')[1]
         for j in range(b, b + consec):
             try:
-                name = avail[j].get_attribute('title').split(' - ')[1]
-                print(name)
+                name2 = avail[j].get_attribute('title').split(' - ')[1]
+                print(f'comparing {name1} to {name2}')
+                if name1 == name2 and j == b+consec-1:
+                    return b
             except:
                 #this would only trigger when out of range of available
                 return None
@@ -39,7 +42,6 @@ if __name__ == '__main__':
     i = 0
     while i < len(available):
         starts = available[i].get_attribute("title")[available[i].get_attribute('title').index('-') + 2:].startswith("Ground")
-        print(starts)
         if starts:
             #removing ground floors and adding them to another list.
             ground.append(available[i])
@@ -47,10 +49,10 @@ if __name__ == '__main__':
             i-=1
         i+=1
 
-    find_consec(available, 1)
-    # for i in available:
-    #     print(i.get_attribute("title"))
-    #
+    print(find_consec(available, 4))
+    for i in available:
+        print(i.get_attribute("title"))
+
     # for i in ground:
     #     print(i)
 
