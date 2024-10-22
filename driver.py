@@ -15,7 +15,7 @@ def find_consec(avail : list, consec: int):
                 name2 = avail[j].get_attribute('title').split(' - ')[1]
                 print(f'comparing {name1} to {name2}')
                 if name1 == name2 and j == b+consec-1:
-                    return b
+                    return avail[b].get_attribute("title")
             except:
                 #this would only trigger when out of range of available
                 return None
@@ -49,9 +49,16 @@ if __name__ == '__main__':
             i-=1
         i+=1
 
-    print(find_consec(available, 4))
-    for i in available:
-        print(i.get_attribute("title"))
+    first_available_set = find_consec(available, 4)
+    print(first_available_set)
+    wait(10)
+    # if first_available_set:
+    #     driver.find_element(f"//a[@title='{first_available_set}']").click()
+    # wait(10)
+
+
+    # for i in available:
+    #     print(i.get_attribute("title"))
 
 
     # for i in ground:
