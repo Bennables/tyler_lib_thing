@@ -9,7 +9,8 @@ def wait(secs:int):
 
 driver = webdriver.Chrome()
 driver.get("https://calendar.library.ucsc.edu/spaces")
-wait(2)
+wait(10)
 
+available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
 
-
+print(available)
