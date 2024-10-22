@@ -7,6 +7,17 @@ import datetime
 def wait(secs:int):
     time.sleep(secs)
 
+def find_consec(avail : list, consec: int):
+    for b in range(len(avail)):
+        for j in range(b, b + consec):
+            try:
+                name = avail[j].get_attribute('title').split(' - ')[1]
+                print(name)
+            except:
+                #this would only trigger when out of range of available
+                return None
+
+
 if __name__ == '__main__':
 
     driver = webdriver.Chrome()
@@ -30,14 +41,16 @@ if __name__ == '__main__':
         starts = available[i].get_attribute("title")[available[i].get_attribute('title').index('-') + 2:].startswith("Ground")
         print(starts)
         if starts:
+            #removing ground floors and adding them to another list.
             ground.append(available[i])
             available.remove(available[i])
             i-=1
         i+=1
 
+    find_consec(available, 1)
+    # for i in available:
+    #     print(i.get_attribute("title"))
+    #
+    # for i in ground:
+    #     print(i)
 
-    for i in available:
-        print(i.get_attribute("title"))
-
-    for i in ground:
-        print(i)
