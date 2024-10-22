@@ -20,3 +20,4 @@ available = sorted(available, key = lambda index : datetime.datetime.strptime(in
 for i in available:
     print(i.get_attribute("title"))
 print(available)
+#a
