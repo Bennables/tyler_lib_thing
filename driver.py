@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
+import datetime
 
 
 def wait(secs:int):
@@ -12,5 +13,10 @@ driver.get("https://calendar.library.ucsc.edu/spaces")
 wait(10)
 
 available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
+for i in available:
+    print(i.get_attribute("title").split(' ')[0])
 
+available = sorted(available, key = lambda index : datetime.datetime.strptime(index.get_attribute("title").split(' ')[0][:-2], "%H:%M:tt"))
+for i in available:
+    print(i.get_attribute("title"))
 print(available)
