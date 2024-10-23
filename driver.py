@@ -54,13 +54,13 @@ if __name__ == '__main__':
     wait(10)
     # if first_available_set:
     #     driver.find_element(f"//a[@title='{first_available_set}']").click()
-    # wait(10)
+    available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
 
-
-    # for i in available:
-    #     print(i.get_attribute("title"))
-
-
+    for i in range(len(available)):
+        if available[i].get_attribute("title") == first_available_set:
+            element = available[i]
+            element.click()
+    wait(10)
     # for i in ground:
     #     print(i)
 
