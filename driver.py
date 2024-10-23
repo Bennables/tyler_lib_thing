@@ -38,6 +38,12 @@ if __name__ == '__main__':
     #     print(i.get_attribute("title"))
     # print(available)
 
+    '''
+    AVAILABLE SHOULD BE SPLIT BY ROOM, AND THEN SORTED BY TIME AND SPLIT BY BLOCKS(MORE THAN 30 MINS BOOKED)
+    '''
+
+
+
     #when you book a slot, if there's one immediately after, it, it auto chooses that one too.
     #tyler doesn't want the ground floors
     ground = []
