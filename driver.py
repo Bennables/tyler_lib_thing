@@ -9,16 +9,18 @@ def wait(secs:int):
 
 def find_consec(avail : list, consec: int):
     for b in range(len(avail)):
+        good_times = []
         name1 = avail[b].get_attribute('title').split(' - ')[1]
         for j in range(b, b + consec):
             try:
                 name2 = avail[j].get_attribute('title').split(' - ')[1]
                 print(f'comparing {name1} to {name2}')
-                if name1 == name2 and j == b+consec-1:
-                    return avail[b].get_attribute("title")
+                if name1 == name2:
+                    good_times.append(avail[j])
             except:
                 #this would only trigger when out of range of available
-                return None
+                return []
+        return good_times
 
 
 if __name__ == '__main__':
@@ -48,19 +50,16 @@ if __name__ == '__main__':
             available.remove(available[i])
             i-=1
         i+=1
-
-    first_available_set = find_consec(available, 4)
-    print(first_available_set)
+    consec = 4
+    first_available_set = find_consec(available, consec)
     wait(10)
     # if first_available_set:
     #     driver.find_element(f"//a[@title='{first_available_set}']").click()
     available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
 
-    for i in range(len(available)):
-        if available[i].get_attribute("title") == first_available_set:
-            element = available[i]
-            element.click()
+    for i in range(0, len(first_available_set), 2):
+        element = available[i]
+        element.click()
     wait(10)
     # for i in ground:
     #     print(i)
-
