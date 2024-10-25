@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
+from datetime import timedelta
 import datetime
 
 
@@ -11,15 +12,22 @@ def find_consec(avail : list, consec: int):
     for b in range(len(avail)):
         good_times = []
         name1 = avail[b].get_attribute('title').split(' - ')[1]
+        time1 =  datetime.datetime.strptime(avail[b].get_attribute("title").split(' ')[0], "%I:%M%p")
         for j in range(b, b + consec):
             try:
                 name2 = avail[j].get_attribute('title').split(' - ')[1]
+                time2 = datetime.datetime.strptime(avail[j].get_attribute("title").split(' ')[0], "%I:%M%p")
+                time_change = time2-time1 < timedelta(minutes = 31)
                 print(f'comparing {name1} to {name2}')
                 if name1 == name2:
                     good_times.append(avail[j])
+                    time1 = time2
+                else:
+                    good_times.clear()
+                    break
             except:
                 #this would only trigger when out of range of available
-                return []
+                break
         return good_times
 
 
