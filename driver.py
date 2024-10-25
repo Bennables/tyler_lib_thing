@@ -77,7 +77,7 @@ if __name__ == '__main__':
             available.remove(available[i])
             i-=1
         i+=1
-    consec = 3
+    consec = 2
     first_available_set = find_consec(available, consec)
     wait(10)
 
@@ -85,13 +85,19 @@ if __name__ == '__main__':
     print(first_available_set)
     for i in first_available_set:
         print(i.get_attribute("title"))
-    print(available)
+    # print(available)
 
     for i in range(0, len(first_available_set), 2):
         element = available[i]
         print(element)
         element.click()
         wait(5)
+    wait(5)
 
+    button = driver.find_elements(by= By.CLASS_NAME, value = 'btn-primary')
+    for i in button:
+        print(i.get_attribute('name'))
+
+    wait(5)
     # for i in ground:
     #     print(i)
