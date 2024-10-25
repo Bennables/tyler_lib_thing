@@ -94,10 +94,22 @@ if __name__ == '__main__':
         wait(5)
     wait(5)
 
-    button = driver.find_elements(by= By.CLASS_NAME, value = 'btn-primary')
-    for i in button:
-        print(i.get_attribute('name'))
-
+    button = driver.find_element(by= By.CLASS_NAME, value = 'btn-primary')
     wait(5)
+    button.click()
+    wait(5)
+    button = driver.find_element(by= By.ID, value = 'terms_accept')
+    wait(5)
+    button.click()
     # for i in ground:
     #     print(i)
+    wait(5)
+    text_boxes = driver.find_elements(by= By.CLASS_NAME, value = 'form-control')
+    for i in range(len(text_boxes)):
+        print(text_boxes[i].get_attribute("placeholder"))
+        if text_boxes[i].get_attribute('placeholder') == 'First Name':
+            text_boxes = text_boxes[i:i+4]
+            break
+
+    for i in text_boxes:
+        print(i.get_attribute("name"))
