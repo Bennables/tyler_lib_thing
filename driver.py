@@ -22,12 +22,17 @@ def find_consec(avail : list, consec: int):
             try:
                 #gets the second room name
                 name2 = avail[j].get_attribute('title').split(' - ')[1]
+                #gets teh second time
                 time2 = datetime.datetime.strptime(avail[j].get_attribute("title").split(' ')[0], "%I:%M%p")
+                #makes sure the time slots are consecutive
                 time_change = time2-time1 < timedelta(minutes = 31)
                 print(f'comparing {name1} to {name2}')
+                #checking
                 if name1 == name2 and time_change:
                     good_times.append(avail[j])
+                    #updates time1 to compare next loop
                     time1 = time2
+                    #returns the list if found enough consecutive time slots in same room
                     if len(good_times) == consec:
                         print("Found a good room.")
                         return good_times
