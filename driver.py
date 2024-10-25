@@ -9,26 +9,34 @@ def wait(secs:int):
     time.sleep(secs)
 
 def find_consec(avail : list, consec: int):
+    #initialize array to hold on to good times
+    good_times = []
+    #loop thru avail
     for b in range(len(avail)):
+        #resetting the list bc hasn't been found
         good_times = []
+        #gets the room name
         name1 = avail[b].get_attribute('title').split(' - ')[1]
         time1 =  datetime.datetime.strptime(avail[b].get_attribute("title").split(' ')[0], "%I:%M%p")
         for j in range(b, b + consec):
             try:
+                #gets the second room name
                 name2 = avail[j].get_attribute('title').split(' - ')[1]
                 time2 = datetime.datetime.strptime(avail[j].get_attribute("title").split(' ')[0], "%I:%M%p")
                 time_change = time2-time1 < timedelta(minutes = 31)
                 print(f'comparing {name1} to {name2}')
-                if name1 == name2:
+                if name1 == name2 and time_change:
                     good_times.append(avail[j])
                     time1 = time2
+                    if len(good_times) == consec:
+                        print("Found a good room.")
+                        return good_times
                 else:
-                    good_times.clear()
                     break
             except:
                 #this would only trigger when out of range of available
-                break
-        return good_times
+                return []
+    return good_times
 
 
 if __name__ == '__main__':
@@ -64,16 +72,21 @@ if __name__ == '__main__':
             available.remove(available[i])
             i-=1
         i+=1
-    consec = 4
+    consec = 3
     first_available_set = find_consec(available, consec)
     wait(10)
-    # if first_available_set:
+
     #     driver.find_element(f"//a[@title='{first_available_set}']").click()
-    available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
+    print(first_available_set)
+    for i in first_available_set:
+        print(i.get_attribute("title"))
+    print(available)
 
     for i in range(0, len(first_available_set), 2):
         element = available[i]
+        print(element)
         element.click()
-    wait(10)
+        wait(5)
+
     # for i in ground:
     #     print(i)
