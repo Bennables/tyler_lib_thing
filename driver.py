@@ -106,10 +106,18 @@ if __name__ == '__main__':
     wait(5)
     text_boxes = driver.find_elements(by= By.CLASS_NAME, value = 'form-control')
     for i in range(len(text_boxes)):
-        print(text_boxes[i].get_attribute("placeholder"))
+        # print(text_boxes[i].get_attribute("placeholder"))
         if text_boxes[i].get_attribute('placeholder') == 'First Name':
             text_boxes = text_boxes[i:i+4]
             break
 
     for i in text_boxes:
         print(i.get_attribute("name"))
+
+    text = input("First Last Email Label")
+    answers = text.split(' ')
+    for i in range(4):
+        text_boxes[i].send_keys(answers[i])
+    wait(5)
+
+    
