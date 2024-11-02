@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 import time
 from datetime import timedelta
 import datetime
+from config import TOKEN
 
 
 def wait(secs:int):
