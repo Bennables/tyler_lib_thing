@@ -60,5 +60,17 @@ async def addprof(ctx, *args):
         await ctx.send(f"Enter your first name, last name, email") 
         await ctx.send(f'Format: "\!add_prof first last email"')
 
+@bot.command()
+async def checkprof(ctx):
+    done = False
+    with open("accounts.csv", mode="r", newline="") as file:
+        reader = csv.reader(file)
+        for i in reader:
+            if i['Discord'] == ctx.author.name:
+                # Keep only non-empty rows
+                done = True
+                await ctx.send(f'{i[1], i[2], i[3]}')
+    if not done:
+        await ctx.send("No existing account")
 # Run the bot with your token
 bot.run(TOKEN)
