@@ -123,18 +123,18 @@ def check_user(user):
 def book_it(user, consec):
     if check_user(user):
         driver = create_driver()
-        wait(5)
+        wait(3)
         available = find_available_times(driver)
         wait(2)
         available = remove_ground_floors(available)
         first_available_set = find_consec(available, consec)
-        wait(3)
+        wait(1)
         loop_print(first_available_set)
         click_times(first_available_set)
         click_stuff(driver)
         text_boxes = find_text_boxes(driver)
         values = fill_form(user)
-        wait(3)
+        wait(1)
         if values:
             for i in range(3):
                 text_boxes[i].send_keys(values[i])
