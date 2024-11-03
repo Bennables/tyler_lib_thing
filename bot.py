@@ -3,7 +3,7 @@ from discord.ext import commands
 from config import TOKEN
 import csv
 from driver import book_it
-
+from datetime import datetime
 
 
 intents = Intents.default()
@@ -11,21 +11,58 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix = '!', intents = intents)
 
+def find_matching_format(time_string, afternoon = True):
+    if len(time_string) ==1:
+        time_string = f'0{time_string}'
+
+    # Check the format based on the presence of a colon and string length
+    if ":" in time_string and len(time_string) == 5:  # "HH:MM" format
+        format_str = "%H:%M"
+        
+    elif len(time_string) == 2:  # "HH" format
+        format_str = "%H"
+    else:
+        raise ValueError("Invalid time format. Use 'HH' or 'HH:MM'.")
+
+    # Parse the time based on the detected format
+    specified_time = datetime.strptime(time_string, format_str)
+
+    hour = specified_time.hour
+    if afternoon:
+        if 12 <= hour + 12 <= 23:
+            hour += 12
+
+
+    # Replace the date part with the current date
+    current_date_time = datetime.now().replace(
+        hour=hour,
+        minute=specified_time.minute,
+        second=0,
+        microsecond=0
+    )
+    
+    # Return both the datetime object and the format used
+    return current_date_time, format_str
+
+
+
 @bot.command()
-async def book(ctx, time_hours):
-    try:
-        # Send a hello message to the user
-        time = float(time_hours)
-        time = int(time/.5)
-        a = book_it(ctx.author.name, time)
-        if a == 0:
-            await ctx.send("Success!")
-        elif a == 2:
-            await ctx.send("You don't have a login yet, use '!adprof'")
-        elif a == 3:
-            await ctx.send("there was an error.")
-    except:
-        await ctx.send('Please use in format: "!book time_in_hours"')
+async def book(ctx, start, time_hours, afternoon = True):
+    find_time, format = find_matching_format(start, afternoon)
+
+    # Send a hello message to the user
+    time = float(time_hours)
+    time = int(time/.5)
+    print(start, find_time, time_hours)
+    a = book_it(ctx.author.name, time, find_time)
+    if a == 0:
+        await ctx.send("Success!")
+    elif a == 2:
+        await ctx.send("You don't have a login yet, use '!adprof'")
+    elif a == 3:
+        await ctx.send("there was an error.")
+    # except:
+    #     await ctx.send('Please use in format: "!book time_in_hours"')
 
 @bot.command()
 async def addprof(ctx, *args):
@@ -77,7 +114,7 @@ async def checkprof(ctx):
         await ctx.send("No existing account")
 
 @bot.command()
-async def help(ctx):
+async def helps(ctx):
     await ctx.send("!addprof")
     await ctx.send("!checkprof")
     await ctx.send("!book")

@@ -81,7 +81,23 @@ def click_times(first_available_set):
         element.click()
         wait(5)
 
+def remove_bad_times(available, time, consec):
+    available2 = []
+    i=0
+    while i < len(available):
+        current = datetime.datetime.strptime(available[i].get_attribute("title").split(' ')[0], "%I:%M%p")
+        reference_date = time
+        # Change the year, month, and day of `first_date` to match `reference_date`
+        current = current.replace(year=reference_date.year, month=reference_date.month, day=reference_date.day)
+        print(current, time, time + timedelta(hours = consec/2))
+        if  current >= time and current < time + timedelta(hours = consec/2):
+            available2.append(available[i])
+        i+=1
+    loop_print(available2)
+    return available2
+
 def click_stuff(driver):
+
     button = driver.find_element(by= By.CLASS_NAME, value = 'btn-primary')
     wait(2)
     button.click()
@@ -118,23 +134,31 @@ def check_user(user):
                 return True
     return False
 
-        
+def start_and_end(driver):
+    # start = first_available_set[0].get_attribute("title")
+    # end = first_available_set[-1].get_attribute("title")
+    # print(start, end)
+    return ''
 
-def book_it(user, consec):
+def book_it(user, consec, time):
+    finished_string = ''
     if check_user(user):
         driver = create_driver()
         wait(3)
         available = find_available_times(driver)
-        wait(2)
+
         available = remove_ground_floors(available)
+        available = remove_bad_times(available, time, consec)
+        loop_print(available)
+
         first_available_set = find_consec(available, consec)
-        wait(1)
-        loop_print(first_available_set)
+        wait(3)
         click_times(first_available_set)
         click_stuff(driver)
         text_boxes = find_text_boxes(driver)
         values = fill_form(user)
-        wait(1)
+        finished_string += start_and_end(driver)
+        wait(5)
         if values:
             for i in range(3):
                 text_boxes[i].send_keys(values[i])
