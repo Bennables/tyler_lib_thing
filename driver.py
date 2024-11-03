@@ -44,37 +44,27 @@ def find_consec(avail : list, consec: int):
                 return []
     return good_times
 
+def create_driver():
+    driver = webdriver.Chrome()
+    print(type(driver))
+    return driver.get("https://calendar.library.ucsc.edu/spaces")
+
+def find_available_times(driver):
+    available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
+    return sorted(available, key = lambda index : (index.get_attribute("title")[index.get_attribute('title').index('-') + 2:], datetime.datetime.strptime(index.get_attribute("title").split(' ')[0], "%I:%M%p")))
 
 if __name__ == '__main__':
+    driver = create_driver()
+    wait(3)
+    available = find_available_times(driver)
 
-    driver = webdriver.Chrome()
-    driver.get("https://calendar.library.ucsc.edu/spaces")
-    wait(10)
-
-    available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
-    # for i in available:
-        # print(i.get_attribute("title").split(' ')[0])
-
-    available = sorted(available, key = lambda index : (index.get_attribute("title")[index.get_attribute('title').index('-') + 2:], datetime.datetime.strptime(index.get_attribute("title").split(' ')[0], "%I:%M%p")))
-    # for i in available:
-    #     print(i.get_attribute("title"))
-    # print(available)
-
-    '''
-    AVAILABLE SHOULD BE SPLIT BY ROOM, AND THEN SORTED BY TIME AND SPLIT BY BLOCKS(MORE THAN 30 MINS BOOKED)
-    '''
-
-
-
-    #when you book a slot, if there's one immediately after, it, it auto chooses that one too.
-    #tyler doesn't want the ground floors
-    ground = []
+    # ground = []
     i = 0
     while i < len(available):
         starts = available[i].get_attribute("title")[available[i].get_attribute('title').index('-') + 2:].startswith("Ground")
         if starts:
             #removing ground floors and adding them to another list.
-            ground.append(available[i])
+            # ground.append(available[i])
             available.remove(available[i])
             i-=1
         i+=1
