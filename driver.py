@@ -107,32 +107,40 @@ def fill_form(user):
             if i[0] == user:
                 return i
     return None
-            
+
+def check_user(user):
+    # try:
+    with open('accounts.csv', 'r') as file:
+        reader = csv.reader(file)
+        row = [row for row in reader]
+        for i in row:
+            if i[0] == user:
+                return True
+    return False
+
         
 
 def book_it(user, consec):
-    # try:
-    driver = create_driver()
-    wait(5)
-    available = find_available_times(driver)
-    wait(2)
-    available = remove_ground_floors(available)
-    first_available_set = find_consec(available, consec)
-    wait(3)
-    loop_print(first_available_set)
-    click_times(first_available_set)
-    click_stuff(driver)
-    text_boxes = find_text_boxes(driver)
-    values = fill_form(user)
-    wait(10)
-    if values:
-        for i in range(3):
-            text_boxes[i].send_keys(values[i])
-        wait (10)
-        return (0, 0)
+    if check_user(user):
+        driver = create_driver()
+        wait(5)
+        available = find_available_times(driver)
+        wait(2)
+        available = remove_ground_floors(available)
+        first_available_set = find_consec(available, consec)
+        wait(3)
+        loop_print(first_available_set)
+        click_times(first_available_set)
+        click_stuff(driver)
+        text_boxes = find_text_boxes(driver)
+        values = fill_form(user)
+        wait()
+        if values:
+            for i in range(3):
+                text_boxes[i].send_keys(values[i])
+            wait (10)
+            return (0, 0)
+        else:
+            return 2
     else:
         return 2
-    # except:
-    #     return 3
-    print("JFDKLFSKDJFLKDSJFD")
-    print("F:DJKFSLKDFJLSDKJFLKDFJLKDJFLKDSFJLK")

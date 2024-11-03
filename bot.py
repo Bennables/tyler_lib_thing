@@ -25,7 +25,7 @@ async def book(ctx, time_hours):
         await ctx.send("there was an error.")
 
 @bot.command()
-async def add_prof(ctx, *args):
+async def addprof(ctx, *args):
     #getting the arguments
     #check if we can add them
     args = list(args)
