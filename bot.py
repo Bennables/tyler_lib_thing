@@ -28,9 +28,8 @@ def find_matching_format(time_string, afternoon = True):
     specified_time = datetime.strptime(time_string, format_str)
 
     hour = specified_time.hour
-    if afternoon:
-        if 12 <= hour + 12 <= 23:
-            hour += 12
+    if not 8<= hour <=22:
+        hour += 12
 
 
     # Replace the date part with the current date
@@ -47,8 +46,8 @@ def find_matching_format(time_string, afternoon = True):
 
 
 @bot.command()
-async def book(ctx, start, time_hours, afternoon = True):
-    find_time, format = find_matching_format(start, afternoon)
+async def book(ctx, start, time_hours):
+    find_time, format = find_matching_format(start)
 
     # Send a hello message to the user
     time = float(time_hours)
