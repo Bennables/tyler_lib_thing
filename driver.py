@@ -48,7 +48,8 @@ def find_consec(avail : list, consec: int):
 def create_driver():
     driver = webdriver.Chrome()
     print(type(driver))
-    return driver.get("https://calendar.library.ucsc.edu/spaces")
+    driver.get("https://calendar.library.ucsc.edu/spaces")
+    return driver
 
 def find_available_times(driver):
     available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
@@ -102,36 +103,36 @@ def fill_form(user):
     with open('accounts.csv', 'r') as file:
         reader = csv.reader(file)
         row = [row for row in reader]
-        user_row = []
         for i in row:
             if i[0] == user:
-                user_row = i
                 return i
     return None
             
         
 
 def book_it(user, consec):
-    try:
-        driver = create_driver()
-        wait(3)
-        available = find_available_times(driver)
-        wait(3)
-        available = remove_ground_floors(available)
-        first_available_set = find_consec(available, consec)
-        wait(3)
-        #loop_print(first_available_set)
-        click_times(first_available_set)
-        click_stuff(driver)
-        text_boxes = find_text_boxes(driver)
-        values = fill_form(user)
-        if values:
-            for i in range(3):
-                text_boxes[i].send_keys(values[i])
-            return "Success"
-        else:
-            return "No Profile Yet"
-    except:
-        return "Failed"
+    # try:
+    driver = create_driver()
+    wait(5)
+    available = find_available_times(driver)
+    wait(2)
+    available = remove_ground_floors(available)
+    first_available_set = find_consec(available, consec)
+    wait(3)
+    loop_print(first_available_set)
+    click_times(first_available_set)
+    click_stuff(driver)
+    text_boxes = find_text_boxes(driver)
+    values = fill_form(user)
+    wait(10)
+    if values:
+        for i in range(3):
+            text_boxes[i].send_keys(values[i])
+        wait (10)
+        return (0, 0)
+    else:
+        return 2
+    # except:
+    #     return 3
     print("JFDKLFSKDJFLKDSJFD")
     print("F:DJKFSLKDFJLSDKJFLKDFJLKDJFLKDSFJLK")
