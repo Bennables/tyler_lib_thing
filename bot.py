@@ -13,16 +13,19 @@ bot = commands.Bot(command_prefix = '!', intents = intents)
 
 @bot.command()
 async def book(ctx, time_hours):
-    # Send a hello message to the user
-    time = float(time_hours)
-    time = int(time/.5)
-    a = book_it(ctx.author.name, time)
-    if a == 0:
-        await ctx.send("Success!")
-    elif a == 2:
-        await ctx.send("You don't have a login yet, use '!adprof'")
-    elif a == 3:
-        await ctx.send("there was an error.")
+    try:
+        # Send a hello message to the user
+        time = float(time_hours)
+        time = int(time/.5)
+        a = book_it(ctx.author.name, time)
+        if a == 0:
+            await ctx.send("Success!")
+        elif a == 2:
+            await ctx.send("You don't have a login yet, use '!adprof'")
+        elif a == 3:
+            await ctx.send("there was an error.")
+    except:
+        await ctx.send('Please use in format: "!book time_in_hours"')
 
 @bot.command()
 async def addprof(ctx, *args):
@@ -72,5 +75,13 @@ async def checkprof(ctx):
                 await ctx.send(f'{i[1], i[2], i[3]}')
     if not done:
         await ctx.send("No existing account")
+
+@bot.command()
+async def help(ctx):
+    await ctx.send("!addprof")
+    await ctx.send("!checkprof")
+    await ctx.send("!book")
+
+
 # Run the bot with your token
 bot.run(TOKEN)
