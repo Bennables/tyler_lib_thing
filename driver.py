@@ -53,11 +53,8 @@ def find_available_times(driver):
     available = driver.find_elements(by = By.CLASS_NAME, value = "s-lc-eq-avail")
     return sorted(available, key = lambda index : (index.get_attribute("title")[index.get_attribute('title').index('-') + 2:], datetime.datetime.strptime(index.get_attribute("title").split(' ')[0], "%I:%M%p")))
 
-if __name__ == '__main__':
-    driver = create_driver()
-    wait(3)
-    available = find_available_times(driver)
-
+def remove_ground_floors(available):
+    #tyler doesn't want any ground floors. I think I"ll make it so that he'll get ground floors if there are no upper floors available.
     # ground = []
     i = 0
     while i < len(available):
@@ -68,22 +65,31 @@ if __name__ == '__main__':
             available.remove(available[i])
             i-=1
         i+=1
-    consec = 2
-    first_available_set = find_consec(available, consec)
-    wait(10)
+    return available
 
-    #     driver.find_element(f"//a[@title='{first_available_set}']").click()
-    print(first_available_set)
-    for i in first_available_set:
+def loop_print(arr):
+    for i in arr:
         print(i.get_attribute("title"))
     # print(available)
 
+
+def book_it(consec):
+    driver = create_driver()
+    wait(3)
+    available = find_available_times(driver)
+    wait(3)
+    available = remove_ground_floors(available)
+    first_available_set = find_consec(available, consec)
+    wait(3)
+    #loop_print(first_available_set)
     for i in range(0, len(first_available_set), 2):
         element = available[i]
         print(element)
         element.click()
         wait(5)
     wait(5)
+
+    
 
     button = driver.find_element(by= By.CLASS_NAME, value = 'btn-primary')
     wait(5)
