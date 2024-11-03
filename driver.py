@@ -134,7 +134,7 @@ def book_it(user, consec):
         click_stuff(driver)
         text_boxes = find_text_boxes(driver)
         values = fill_form(user)
-        wait()
+        wait(3)
         if values:
             for i in range(3):
                 text_boxes[i].send_keys(values[i])
