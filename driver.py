@@ -4,6 +4,7 @@ import time
 from datetime import timedelta
 import datetime
 from config import TOKEN
+import csv
 
 
 def wait(secs:int):
@@ -72,50 +73,65 @@ def loop_print(arr):
         print(i.get_attribute("title"))
     # print(available)
 
-
-def book_it(consec):
-    driver = create_driver()
-    wait(3)
-    available = find_available_times(driver)
-    wait(3)
-    available = remove_ground_floors(available)
-    first_available_set = find_consec(available, consec)
-    wait(3)
-    #loop_print(first_available_set)
+def click_times(first_available_set):
     for i in range(0, len(first_available_set), 2):
-        element = available[i]
+        element = first_available_set[i]
         print(element)
         element.click()
         wait(5)
-    wait(5)
 
-    
-
+def click_stuff(driver):
     button = driver.find_element(by= By.CLASS_NAME, value = 'btn-primary')
-    wait(5)
+    wait(2)
     button.click()
-    wait(5)
+    wait(2)
     button = driver.find_element(by= By.ID, value = 'terms_accept')
-    wait(5)
+    wait(2)
     button.click()
     # for i in ground:
-    #     print(i)
-    wait(5)
+
+def find_text_boxes(driver):
     text_boxes = driver.find_elements(by= By.CLASS_NAME, value = 'form-control')
     for i in range(len(text_boxes)):
         # print(text_boxes[i].get_attribute("placeholder"))
         if text_boxes[i].get_attribute('placeholder') == 'First Name':
-            text_boxes = text_boxes[i:i+4]
-            break
+            text_boxes = text_boxes[i:i+3]
+            return text_boxes
+        
+def fill_form(user):
+    with open('accounts.csv', 'r') as file:
+        reader = csv.reader(file)
+        row = [row for row in reader]
+        user_row = []
+        for i in row:
+            if i[0] == user:
+                user_row = i
+                return i
+    return None
+            
+        
 
-    for i in text_boxes:
-        print(i.get_attribute("name"))
-
-    text = input("First Last Email Label")
-    answers = text.split(' ')
-    for i in range(4):
-        text_boxes[i].send_keys(answers[i])
-    wait(5)
-
+def book_it(user, consec):
+    try:
+        driver = create_driver()
+        wait(3)
+        available = find_available_times(driver)
+        wait(3)
+        available = remove_ground_floors(available)
+        first_available_set = find_consec(available, consec)
+        wait(3)
+        #loop_print(first_available_set)
+        click_times(first_available_set)
+        click_stuff(driver)
+        text_boxes = find_text_boxes(driver)
+        values = fill_form(user)
+        if values:
+            for i in range(3):
+                text_boxes[i].send_keys(values[i])
+            return "Success"
+        else:
+            return "No Profile Yet"
+    except:
+        return "Failed"
     print("JFDKLFSKDJFLKDSJFD")
     print("F:DJKFSLKDFJLSDKJFLKDFJLKDJFLKDSFJLK")
