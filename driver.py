@@ -12,10 +12,62 @@ def wait(secs:int):
 
 def find_consec(avail : list, consec: int):
     #initialize array to hold on to good times
-    good_times = []
-    #loop thru avail
-    for b in range(len(avail)):
-        #resetting the list bc hasn't been found
+    timeframes = []
+    times = []
+
+    for b in range(len(avail) - 1):
+        
+        time1 =  datetime.datetime.strptime(avail[b].get_attribute("title").split(' ')[0], "%I:%M%p")
+        time2 = datetime.datetime.strptime(avail[b + 1].get_attribute("title").split(' ')[0], "%I:%M%p")
+        name1 = avail[b].get_attribute('title').split(' - ')[1]
+        name2 = avail[b+1].get_attribute('title').split(' - ')[1]
+        time_change = time2-time1 < timedelta(minutes = 31)
+        if time_change and name1 == name2:
+            if not times:
+                times.append(avail[b])
+            times.append(avail[b+1])
+        else:
+            timeframes.append(times)
+            times = []
+        
+
+    i = 0
+    while i < len(timeframes):
+        if len(timeframes[i]) < consec:
+            timeframes.remove(timeframes[i])
+            print('removed')
+            i-=1
+        i += 1
+
+
+    for i in range(len(timeframes)):
+        loop_print(timeframes[i])
+    sorted = sorted(
+        timeframes,
+        key=lambda index: datetime.datetime.strptime(
+            index[0].get_attribute("title").split(' - ')[0].split(' ')[0].upper(),
+            "%I:%M%p"
+        )
+    )
+    for i in range(len(sorted)):
+        print("NEW ONE")
+        for j in range(len(sorted[i])):
+            print(sorted[i][j].get_attribute("title"))
+
+        
+
+
+
+        '''
+        parse the dates and put them into lists based on consecutive
+        put into lists, if len isn't greater than this, remove it
+        sort by time on start.
+
+
+        '''
+
+
+        '''#resetting the list bc hasn't been found
         good_times = []
         #gets the room name
         name1 = avail[b].get_attribute('title').split(' - ')[1]
@@ -42,8 +94,8 @@ def find_consec(avail : list, consec: int):
                     break
             except:
                 #this would only trigger when out of range of available
-                return []
-    return good_times
+                return []'''
+
 
 def create_driver():
     driver = webdriver.Chrome()
@@ -77,7 +129,6 @@ def loop_print(arr):
 def click_times(first_available_set):
     for i in range(0, len(first_available_set), 2):
         element = first_available_set[i]
-        print(element)
         element.click()
         wait(5)
 
@@ -89,11 +140,9 @@ def remove_bad_times(available, time, consec):
         reference_date = time
         # Change the year, month, and day of `first_date` to match `reference_date`
         current = current.replace(year=reference_date.year, month=reference_date.month, day=reference_date.day)
-        print(current, time, time + timedelta(hours = consec/2))
-        if  current >= time and current < time + timedelta(hours = consec/2):
+        if  current >= time:
             available2.append(available[i])
         i+=1
-    loop_print(available2)
     return available2
 
 def click_stuff(driver):
@@ -155,7 +204,6 @@ def book_it(user, consec, time, days_ahead = 0):
 
         available = remove_ground_floors(available)
         available = remove_bad_times(available, time, consec)
-        loop_print(available)
         try:
             first_available_set = find_consec(available, consec)
             wait(3)

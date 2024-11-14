@@ -55,7 +55,6 @@ async def book(ctx, start = None, time_hours = None, days_ahead = 0):
         # Send a hello message to the user
         time = float(time_hours)
         time = int(time/.5)
-        print(start, find_time, time_hours)
         a = book_it(ctx.author.name, time, find_time, days_ahead)
         if a == 0:
             await ctx.send("Success!")
