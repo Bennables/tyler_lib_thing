@@ -11,7 +11,7 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix = '!', intents = intents)
 
-def find_matching_format(time_string, afternoon = True):
+def find_matching_format(time_string):
     if len(time_string) ==1:
         time_string = f'0{time_string}'
 
@@ -46,20 +46,26 @@ def find_matching_format(time_string, afternoon = True):
 
 
 @bot.command()
-async def book(ctx, start, time_hours):
-    find_time, format = find_matching_format(start)
+async def book(ctx, start = None, time_hours = None, days_ahead = 0):
+    if start == None or time_hours == None:
+        await ctx.send("!book (time to start) (hrs) (optional, days ahead)")
+    else:
+        find_time, format = find_matching_format(start)
 
-    # Send a hello message to the user
-    time = float(time_hours)
-    time = int(time/.5)
-    print(start, find_time, time_hours)
-    a = book_it(ctx.author.name, time, find_time)
-    if a == 0:
-        await ctx.send("Success!")
-    elif a == 2:
-        await ctx.send("You don't have a login yet, use '!adprof'")
-    elif a == 3:
-        await ctx.send("there was an error.")
+        # Send a hello message to the user
+        time = float(time_hours)
+        time = int(time/.5)
+        print(start, find_time, time_hours)
+        a = book_it(ctx.author.name, time, find_time, days_ahead)
+        if a == 0:
+            await ctx.send("Success!")
+        elif a == 2:
+            await ctx.send("You don't have a login yet, use '!adprof'")
+        elif a == 3:
+            await ctx.send("there was an error.")
+        elif a == 4:
+            await ctx.send("that time isn't available")
+
     # except:
     #     await ctx.send('Please use in format: "!book time_in_hours"')
 

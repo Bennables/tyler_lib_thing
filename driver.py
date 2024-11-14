@@ -140,31 +140,39 @@ def start_and_end(driver):
     # print(start, end)
     return ''
 
-def book_it(user, consec, time):
+def book_it(user, consec, time, days_ahead = 0):
     finished_string = ''
     if check_user(user):
         driver = create_driver()
         wait(3)
+
+        for i in range(days_ahead):
+            next = driver.find_element(by = By.CLASS_NAME, value = 'fc-next-button')
+            next.click()
+            wait(2)
+
         available = find_available_times(driver)
 
         available = remove_ground_floors(available)
         available = remove_bad_times(available, time, consec)
         loop_print(available)
-
-        first_available_set = find_consec(available, consec)
-        wait(3)
-        click_times(first_available_set)
-        click_stuff(driver)
-        text_boxes = find_text_boxes(driver)
-        values = fill_form(user)
-        finished_string += start_and_end(driver)
-        wait(5)
-        if values:
-            for i in range(3):
-                text_boxes[i].send_keys(values[i])
-            wait (10)
-            return (0, 0)
-        else:
-            return 2
+        try:
+            first_available_set = find_consec(available, consec)
+            wait(3)
+            click_times(first_available_set)
+            click_stuff(driver)
+            text_boxes = find_text_boxes(driver)
+            values = fill_form(user)
+            finished_string += start_and_end(driver)
+            wait(5)
+            if values:
+                for i in range(3):
+                    text_boxes[i].send_keys(values[i])
+                wait (10)
+                return (0, 0)
+            else:
+                return 2
+        except:
+            return 4
     else:
         return 2
