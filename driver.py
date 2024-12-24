@@ -6,7 +6,7 @@ import datetime
 from config import TOKEN
 import csv
 
-
+git p
 def wait(secs:int):
     time.sleep(secs)
 
